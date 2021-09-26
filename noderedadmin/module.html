@@ -1,0 +1,47 @@
+<!--
+Defining the node UI for the tiddlywiki-search
+Derived from core node https://github.com/node-red/node-red/blob/master/packages/node_modules/%40node-red/nodes/core/network/21-httprequest.js
+Author Robert Munnoch
+-->
+
+<script type="text/javascript">
+    RED.nodes.registerType('nodered-module',{
+        category: 'nodered',
+        color: '#a6bbcf',
+        defaults: {
+            name: {value:""},
+            noderedserver: {type: "nodered-config", required: true},
+            function: {value: "upload"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "font-awesome/fa-search",
+        label: function() {
+            return this.name||"nodered-module";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="nodered-module">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-noderedserver"><i class="fa fa-database"></i> NodeRed Server</label>
+        <input type="text" id="node-input-noderedserver">
+    </div>
+    <div class="form-row">
+        <label for="node-input-function"><i class="fa fa-database"></i> NodeRed Server</label>
+        <select id="node-input-function">
+            <option>upload</option>
+            <option>remove</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="nodered-module">
+    <p>
+        Connect to nodered admin api.
+    </p>
+</script>

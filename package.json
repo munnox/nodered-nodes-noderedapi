@@ -1,0 +1,28 @@
+{
+  "name": "nodered-nodes-noderedapi",
+  "version": "0.1.0",
+  "description": "Plan to build a Node admin API node set keeping it fairly basic. But will allow me to go meta... :D",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pack": "npm pack",
+    "upload": "curl -X POST --compressed -F tarball=@'nodered-nodes-noderedapi-0.1.0.tgz' 'http://localhost:1880/nodes'",
+    "delete": "curl 'http://localhost:30000/nodes/nodered-nodes-nodesapi' -X DELETE",
+    "testserver": "docker run -d -p 30000:1880 --name mynodered -v `pwd`/:/local/  nodered/node-red",
+    "testinstall": "docker exec mynodered npm install /local/",
+    "testrestart": "docker restart mynodered",
+    "testlogs": "docker logs -f mynodered",
+    "testremove": "docker rm -f mynodered"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@munnoxtech.com:nodered/nodered-nodes-noderedapi.git"
+  },
+  "author": "Robert Munnoch",
+  "license": "GPLv3",
+  "node-red": {
+    "nodes": {
+      "noderedadmin-config": "noderedadmin/config.js",
+      "noderedadmin-module": "noderedadmin/module.js"
+    }
+  }
+}
