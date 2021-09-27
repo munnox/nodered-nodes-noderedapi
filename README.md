@@ -26,13 +26,157 @@ npm build
 # create a tgz which can then be upload to the nodred server
 npm pack
 
-# Alias
-# Create a nodered server to test with
-alias server="docker run -d -p 30000:1880 --name mynodered -v `pwd`/:/local/  nodered/node-red"
-alias install="docker exec mynodered npm install /local/"
-alias restart="docker restart mynodered"
-# docker run -d -p 1880:1880 --name mynodered nodered/node-red
+# Test docker container commands
+# Run a server to test the module on
+npm run testserver
+# Remove the test server
+npm run testremove
+# Reset test server
+npm run testrestart
+# Check logs
+npm run testlogs
+```
 
-alias logs="docker logs -f mynodered"
-alias remove="docker rm -f mynodered"
+Flow for restarting the container:
+
+```json
+[
+    {
+        "id": "d03b06dca79b07c2",
+        "type": "docker-container-actions",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "config": "c9c6c72de657e1ee",
+        "container": "mynodered",
+        "action": "restart",
+        "options": "",
+        "x": 390,
+        "y": 280,
+        "wires": [
+            [
+                "79f08d36fc110d9f"
+            ]
+        ]
+    },
+    {
+        "id": "3243c0bcccd896aa",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 280,
+        "wires": [
+            [
+                "d03b06dca79b07c2"
+            ]
+        ]
+    },
+    {
+        "id": "79f08d36fc110d9f",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 570,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "0d6018c15bd17785",
+        "type": "nodered-module",
+        "z": "f6f2187d.f17ca8",
+        "name": "Server without auth",
+        "noderedserver": "84f76314786c865b",
+        "function": "upload",
+        "x": 390,
+        "y": 320,
+        "wires": [
+            [
+                "3d072d28d8e4bfbc"
+            ]
+        ]
+    },
+    {
+        "id": "f523cc0832c3fd40",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 320,
+        "wires": [
+            [
+                "0d6018c15bd17785"
+            ]
+        ]
+    },
+    {
+        "id": "3d072d28d8e4bfbc",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 570,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "c9c6c72de657e1ee",
+        "type": "docker-configuration",
+        "host": "/var/run/docker.sock",
+        "port": ""
+    },
+    {
+        "id": "84f76314786c865b",
+        "type": "nodered-config",
+        "name": "",
+        "url": "http://localhost:1880",
+        "authreq": true
+    }
+]
 ```

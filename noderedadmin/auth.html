@@ -5,29 +5,27 @@ Author Robert Munnoch
 -->
 
 <script type="text/javascript">
-    RED.nodes.registerType('nodered-adminapi-module',{
+    RED.nodes.registerType('nodered-adminapi-auth',{
         category: 'nodered',
         color: '#a6bbcf',
         defaults: {
             name: {value:""},
             noderedserver: {type: "nodered-adminapi-config", required: true},
-            function: {value: "Upload"},
-            moduletype: {value: "File"},
-            modulename: {value: "/local/nodered-nodes-noderedapi-0.1.0.tgz"}
+            function: {value: "Check"}
         },
         inputs:1,
         outputs:1,
         icon: "font-awesome/fa-search",
         label: function() {
-            return this.name || "Module";
+            return this.name || "Auth";
         },
         paletteLabel: function () {
-            return this.name || "Module"
+            return this.name || "Auth"
         },
     });
 </script>
 
-<script type="text/html" data-template-name="nodered-adminapi-module">
+<script type="text/html" data-template-name="nodered-adminapi-auth">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -39,25 +37,15 @@ Author Robert Munnoch
     <div class="form-row">
         <label for="node-input-function"><i class="fa fa-database"></i> Operation</label>
         <select id="node-input-function">
-            <option>Upload</option>
-            <option>Remove</option>
+            <option>Get</option>
+            <option>Revoke</option>
+            <option>Check</option>
         </select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-moduletype"><i class="fa fa-database"></i> Module Type</label>
-        <select id="node-input-moduletype">
-            <option>File</option>
-            <option>Literal</option>
-        </select>
-    </div>
-    <div class="form-row">
-        <label for="node-input-modulename"><i class="fa fa-tag"></i> Module Name</label>
-        <input type="text" id="node-input-modulename" placeholder="Module Name">
     </div>
 </script>
 
-<script type="text/html" data-help-name="nodered-adminapi-module">
+<script type="text/html" data-help-name="nodered-adminapi-auth">
     <p>
-        Connect to nodered admin api to control a module.
+        Connect to nodered admin api.
     </p>
 </script>

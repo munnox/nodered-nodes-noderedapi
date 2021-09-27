@@ -19,7 +19,7 @@ module.exports = function(RED) {
         // node.error(`Final config Node:\n${JSON.stringify(this, null, 2)}`);
 
     }
-    RED.nodes.registerType("nodered-config", NodeREDAPIConfigNode, {
+    RED.nodes.registerType("nodered-adminapi-config", NodeREDAPIConfigNode, {
         credentials: {
             username: {type:"text"},
             password: {type:"password"}

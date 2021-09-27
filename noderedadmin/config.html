@@ -5,7 +5,7 @@ Author Robert Munnoch
 -->
 
 <script type="text/javascript">
-    RED.nodes.registerType('nodered-config',{
+    RED.nodes.registerType('nodered-adminapi-config',{
         category: 'config',
         defaults: {
             name: {value: ""},
@@ -13,18 +13,21 @@ Author Robert Munnoch
             authreq: {value:"true", required: true},
         },
         credentials: {
-            username: {type:"text", required: true},
-            password: {type:"password", required: true}
+            username: {type:"text", required: false},
+            password: {type:"password", required: false}
         },
         icon: "font-awesome/fa-search",
         label: function() {
             // return this.credentials.username+"@"+this.url+"|"+this.filter;
             return this.name || this.url;
-        }
+        },
+        paletteLabel: function () {
+            return this.name || "NodeRED Config"
+        },
     });
 </script>
 
-<script type="text/html" data-template-name="nodered-config">
+<script type="text/html" data-template-name="nodered-adminapi-config">
 
     <div class="form-row">
         <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
@@ -51,6 +54,6 @@ Author Robert Munnoch
     </div>
 </script>
 
-<script type="text/html" data-help-name="nodered-config">
+<script type="text/html" data-help-name="nodered-adminapi-config">
     <p>A config node to define a NodeRED server node server for use in other tiddlywiki nodes.</p>
 </script>
