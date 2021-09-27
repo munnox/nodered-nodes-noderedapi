@@ -7,11 +7,12 @@
     "pack": "npm pack",
     "upload": "curl -X POST --compressed -F tarball=@'nodered-nodes-noderedapi-0.1.0.tgz' 'http://localhost:1880/nodes'",
     "delete": "curl 'http://localhost:30000/nodes/nodered-nodes-nodesapi' -X DELETE",
-    "testserver": "docker run -d -p 30000:1880 --name mynodered -v `pwd`/:/local/  nodered/node-red",
+    "testserver": "docker run -d -p 30000:1880 --name mynodered -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`/:/local/ --group-add $(getent group docker | cut -d: -f3)  nodered/node-red",
     "testinstall": "docker exec mynodered npm install /local/",
     "testrestart": "docker restart mynodered",
     "testlogs": "docker logs -f mynodered",
-    "testremove": "docker rm -f mynodered"
+    "testremove": "docker rm -f mynodered",
+    "testlogin": "docker exec -it mynodered bash"
   },
   "repository": {
     "type": "git",
@@ -22,7 +23,12 @@
   "node-red": {
     "nodes": {
       "noderedadmin-config": "noderedadmin/config.js",
+      "noderedadmin-auth": "noderedadmin/auth.js",
       "noderedadmin-module": "noderedadmin/module.js"
     }
+  },
+  "dependencies": {
+    "form-data": "^4.0.0",
+    "got": "^11.8.2"
   }
 }
