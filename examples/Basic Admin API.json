@@ -1,0 +1,273 @@
+[
+    {
+        "id": "a140ae0e38ad0389",
+        "type": "tab",
+        "label": "Basic Admin API",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "d6f7c09802a783cf",
+        "type": "nodered-adminapi-module",
+        "z": "a140ae0e38ad0389",
+        "name": "",
+        "noderedserver": "9b880e49ebb3124f",
+        "function": "Get",
+        "moduletype": "Literal",
+        "modulename": "munnox/nodered-nodes-noderedapi",
+        "x": 560,
+        "y": 280,
+        "wires": [
+            [
+                "e77af4f49276d599",
+                "ea34725e98c32c56"
+            ]
+        ]
+    },
+    {
+        "id": "095af5fb2b74f409",
+        "type": "inject",
+        "z": "a140ae0e38ad0389",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 210,
+        "y": 280,
+        "wires": [
+            [
+                "3dd31c8b9d237e06"
+            ]
+        ]
+    },
+    {
+        "id": "e77af4f49276d599",
+        "type": "debug",
+        "z": "a140ae0e38ad0389",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "3dd31c8b9d237e06",
+        "type": "nodered-adminapi-auth",
+        "z": "a140ae0e38ad0389",
+        "name": "",
+        "noderedserver": "9b880e49ebb3124f",
+        "function": "Check",
+        "x": 400,
+        "y": 280,
+        "wires": [
+            [
+                "d6f7c09802a783cf"
+            ]
+        ]
+    },
+    {
+        "id": "ea34725e98c32c56",
+        "type": "debug",
+        "z": "a140ae0e38ad0389",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "adminapi",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 830,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "3691357ba2466309",
+        "type": "docker-container-actions",
+        "z": "a140ae0e38ad0389",
+        "name": "",
+        "config": "c9c6c72de657e1ee",
+        "container": "mynodered",
+        "action": "restart",
+        "options": "",
+        "x": 560,
+        "y": 80,
+        "wires": [
+            [
+                "f22cba800b0de343"
+            ]
+        ]
+    },
+    {
+        "id": "70884665e80dee95",
+        "type": "inject",
+        "z": "a140ae0e38ad0389",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 350,
+        "y": 80,
+        "wires": [
+            [
+                "3691357ba2466309"
+            ]
+        ]
+    },
+    {
+        "id": "f22cba800b0de343",
+        "type": "debug",
+        "z": "a140ae0e38ad0389",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "69ce167b41868911",
+        "type": "nodered-adminapi-module",
+        "z": "a140ae0e38ad0389",
+        "name": "Install module from /local/",
+        "noderedserver": "9b880e49ebb3124f",
+        "function": "Add",
+        "moduletype": "Literal",
+        "modulename": "/local/",
+        "x": 460,
+        "y": 380,
+        "wires": [
+            [
+                "ea34725e98c32c56"
+            ]
+        ]
+    },
+    {
+        "id": "56bbe68441e67c26",
+        "type": "inject",
+        "z": "a140ae0e38ad0389",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 210,
+        "y": 380,
+        "wires": [
+            [
+                "69ce167b41868911"
+            ]
+        ]
+    },
+    {
+        "id": "0c2ff30ebb2056a3",
+        "type": "nodered-adminapi-module",
+        "z": "a140ae0e38ad0389",
+        "name": "Install module from npm 'node-red-dashboard'",
+        "noderedserver": "9b880e49ebb3124f",
+        "function": "Add",
+        "moduletype": "Literal",
+        "modulename": "node-red-dashboard",
+        "x": 490,
+        "y": 500,
+        "wires": [
+            [
+                "ea34725e98c32c56"
+            ]
+        ]
+    },
+    {
+        "id": "7078496447a63f55",
+        "type": "inject",
+        "z": "a140ae0e38ad0389",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 210,
+        "y": 500,
+        "wires": [
+            [
+                "0c2ff30ebb2056a3"
+            ]
+        ]
+    },
+    {
+        "id": "9b880e49ebb3124f",
+        "type": "nodered-adminapi-config",
+        "name": "",
+        "url": "http://localhost:1880",
+        "authreq": false
+    },
+    {
+        "id": "c9c6c72de657e1ee",
+        "type": "docker-configuration",
+        "host": "/var/run/docker.sock",
+        "port": ""
+    }
+]

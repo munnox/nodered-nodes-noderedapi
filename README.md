@@ -2,6 +2,8 @@
 
 Plan to build a Node admin API node set keeping it fairly basic. But will allow me to go meta... :D
 
+NodeRED API - https://nodered.org/docs/api/admin/methods/
+
 This is to take advantage of:
 
 ```bash
@@ -37,7 +39,7 @@ npm run testrestart
 npm run testlogs
 ```
 
-Flow for restarting the container:
+Flow for restarting the testing container:
 
 ```json
 [
@@ -50,8 +52,8 @@ Flow for restarting the container:
         "container": "mynodered",
         "action": "restart",
         "options": "",
-        "x": 390,
-        "y": 280,
+        "x": 670,
+        "y": 780,
         "wires": [
             [
                 "79f08d36fc110d9f"
@@ -79,8 +81,8 @@ Flow for restarting the container:
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 180,
-        "y": 280,
+        "x": 460,
+        "y": 780,
         "wires": [
             [
                 "d03b06dca79b07c2"
@@ -100,69 +102,8 @@ Flow for restarting the container:
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 570,
-        "y": 280,
-        "wires": []
-    },
-    {
-        "id": "0d6018c15bd17785",
-        "type": "nodered-module",
-        "z": "f6f2187d.f17ca8",
-        "name": "Server without auth",
-        "noderedserver": "84f76314786c865b",
-        "function": "upload",
-        "x": 390,
-        "y": 320,
-        "wires": [
-            [
-                "3d072d28d8e4bfbc"
-            ]
-        ]
-    },
-    {
-        "id": "f523cc0832c3fd40",
-        "type": "inject",
-        "z": "f6f2187d.f17ca8",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 180,
-        "y": 320,
-        "wires": [
-            [
-                "0d6018c15bd17785"
-            ]
-        ]
-    },
-    {
-        "id": "3d072d28d8e4bfbc",
-        "type": "debug",
-        "z": "f6f2187d.f17ca8",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 570,
-        "y": 320,
+        "x": 850,
+        "y": 780,
         "wires": []
     },
     {
@@ -170,13 +111,6 @@ Flow for restarting the container:
         "type": "docker-configuration",
         "host": "/var/run/docker.sock",
         "port": ""
-    },
-    {
-        "id": "84f76314786c865b",
-        "type": "nodered-config",
-        "name": "",
-        "url": "http://localhost:1880",
-        "authreq": true
     }
 ]
 ```

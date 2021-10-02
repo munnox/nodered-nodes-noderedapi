@@ -7,7 +7,7 @@ Author Robert Munnoch
 <script type="text/javascript">
     RED.nodes.registerType('nodered-adminapi-auth',{
         category: 'nodered',
-        color: '#a6bbcf',
+        color: '#C0C0C0',
         defaults: {
             name: {value:""},
             noderedserver: {type: "nodered-adminapi-config", required: true},
@@ -35,11 +35,11 @@ Author Robert Munnoch
         <input type="text" id="node-input-noderedserver">
     </div>
     <div class="form-row">
-        <label for="node-input-function"><i class="fa fa-database"></i> Operation</label>
+        <label for="node-input-function"><i class="fa fa-tag"></i> Operation</label>
         <select id="node-input-function">
+            <option>Check</option>
             <option>Get</option>
             <option>Revoke</option>
-            <option>Check</option>
         </select>
     </div>
 </script>

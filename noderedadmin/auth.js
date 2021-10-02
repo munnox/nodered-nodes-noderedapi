@@ -8,6 +8,8 @@ const utility = require("./utility.js");
 module.exports = function(RED) {
     "use strict";
 
+    const sectionname = "adminapi";
+
     function NodeREDAPIAuthNode(config) {
         RED.nodes.createNode(this,config);
         var node = this;
@@ -23,109 +25,96 @@ module.exports = function(RED) {
         // node.warn("Node debug:");
         // node.warn(JSON.parse(JSON.stringify(node)));
 
-        setTimeout(() => {node.status({fill:"gray",shape:"dot",text:"Initialised"})}, 0);
+        setTimeout(() => {node.status({fill:"gray",shape:"dot",text:"nodered.admin.initialised"})}, 0);
 
-        // node.status({fill:"blue",shape:"dot",text:"init"});
+        node.check = function(msg, nodeSend, nodeDone) {
+            utility.tokenneeded(node, (options, authreq, auth) => {
+                node.status({fill:"green",shape:"dot",text:"nodered.admin.success"});
+                // msg.options = options;
+                msg[sectionname] = {
+                    server: node.server.url,
+                    options: options,
+                    authorisation_required: authreq,
+                    authorisation_info: auth,
+                }
+                node.send(msg);
+                nodeDone();
+            }, (options, reason) => {
+                node.status({fill:"red",shape:"dot",text:"nodered.admin.failed"});
+                if (msg[sectionname].authorisation_required) {
+                    delete msg[sectionname].authorisation_required;
+                }
+                if (msg[sectionname].authorisation_info) {
+                    delete msg[sectionname].authorisation_info;
+                }
+                msg[sectionname] = {
+                    server: node.server.url,
+                    options: options,
+                    reason: reason,
+                }
+                node.send(msg);
+                var error_message = `Failed to get token ${reason} with: ${JSON.stringify(options)}`;
+                node.error(error_message);
+                // throw error_message;
+                nodeDone();
+            })
+        }
 
-        // const options = {
-        //     prefixUrl: node.server.url,
-        //     timeout: node.config.timeout,
-        //     method: 'GET',
-        //     maxRedirects: 3,
-        //     forever: false,
-        //     headers: {
-        //         "content-type": "application/json",
-        //         "Authorization": "Basic " + new Buffer.from(node.server.credentials.username + ':' + node.server.credentials.password).toString('base64')
-        //     } 
-        // }
+        node.get = function(msg, nodeSend, nodeDone) {
+            utility.gettoken(
+                node,
+                node.server.credentials.username,
+                node.server.credentials.password,
+                (token) => {
+                    node.trace("token" + JSON.stringify(token));
+                    node.status({fill:"green",shape:"dot",text:"nodered.admin.success"});
+                    // node.status({fill:"blue",shape:"dot",text:"nodered.status.requesting"});
+                    msg[sectionname] = {
+                        token: token,
+                    };
+                    node.send(msg);
+                    nodeDone();
+                }, (options, reason) => {
+                    node.status({fill:"red",shape:"dot",text:"nodered.admin.failed"});
+                    if (msg[sectionname].token) {
+                        delete msg[sectionname].token;
+                    }
+                    msg[sectionname] = {
+                        server: node.server.url,
+                        options: options,
+                        reason: reason,
+                    }
+                    node.send(msg);
+                    var error_message = `Failed to get token ${reason} with: ${JSON.stringify(options)}`;
+                    node.error(error_message);
+                    // throw error_message;
+                    nodeDone();
+                }
+            );
+        }
 
-
-    
-        node.auth = function(msg, nodeSend, nodeDone) {
-            var preRequestTimestamp = process.hrtime();
-
-            node.status({fill:"blue",shape:"dot",text:"nodered.status.requesting"});
-
-            switch (node.config.function) {
-                case "Check":
-                    utility.tokenneeded(node, (options, authreq, auth) => {
-                        node.status({fill:"green",shape:"dot",text:"nodered.status.success"});
-                        msg.options = options;
-                        msg.auth_required = authreq;
-                        msg.auth = auth;
-                        node.send(msg);
-                        if (authreq) {
-                            node.trace("Token required:" + JSON.stringify(auth));
-                        } else {
-                            node.trace("Token not required");
-                        }
-                    }, (options, reason) => {
-                        node.status({fill:"red",shape:"dot",text:"nodered.status.failed"});
-                        if (msg.auth_required) {
-                            delete msg.auth_required;
-                        }
-                        msg.options = options;
-                        msg.reason = reason;
-                        node.send(msg);
-
-                    })
-                    break;
-                case "Get":
-                    utility.gettoken(
-                        node,
-                        node.server.credentials.username,
-                        node.server.credentials.password,
-                        (token) => {
-                            node.trace("token" + JSON.stringify(token));
-                            node.status({fill:"green",shape:"dot",text:"nodered.status.success"});
-                            // node.status({fill:"blue",shape:"dot",text:"nodered.status.requesting"});
-                            msg.token = token;
-                            node.send(msg);
-                            return;
-
-                            token = token.token_type+' '+token.access_token;
-                            var options = {
-                                headers: {
-                                    "Authorization": token,
-                                    // "Node-RED-Deployment-Type":"reload"
-                                }
-                            }
-
-                            pipeline(
-                                fs.createReadStream('/local/nodered-nodes-noderedapi-0.1.0.tgz'),
-                                got.stream.post(path,options),
-                                new stream.PassThrough()
-                            ).then((res) => {
-                                node.trace("success");
-                            }).catch((err) => {
-                                node.error("failed");
-                            });
-
-
-                        }, (options, reason) => {
-                            if (msg.token) {
-                                delete msg.token;
-                            }
-                            msg.options = options;
-                            msg.payload = reason;
-                            node.send(msg);
-                            node.error("Token failed");
-                        }
-                    );
-                
-                    break;
-                case "Revoke":
-                    break;
-            }
-
-            return;
-
+        node.revoke = function(msg, nodeSend, nodeDone) {
+            throw "Revoke not implemented yet.";
         }
 
         node.on('input', function(msg, nodeSend, nodeDone) {
-            node.auth(msg, nodeSend, nodeDone);
+            var preRequestTimestamp = process.hrtime();
+            node.status({fill:"blue",shape:"dot",text:"nodered.admin.requesting"});
+
+            switch (node.config.function) {
+                case "Check":
+                    node.check(msg,nodeSend,nodeDone);
+                    break;
+                case "Get":
+                    node.get(msg,nodeSend,nodeDone);
+                    break;
+                case "Revoke":
+                    node.revoke(msg,nodeSend,nodeDone);
+                    break;
+            }
+            
             //nodeSend(msg);
-            nodeDone();
+            // nodeDone();
         });
 
     }

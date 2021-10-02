@@ -15,22 +15,8 @@ module.exports = function(RED) {
     // const formdata_node = require("formdata-node");
     // const FormData = formdata_node.FormData;
 
+    const sectionname = "adminapi";
 
-    const pipeline = promisify(stream.pipeline);
-
-    function getservernode(node, config) {
-        // If the nodered server config node is defined then use it other wise fall back to local information
-        if (config.noderedserver) {
-            node.log("Getting the server config node");
-            node.server = RED.nodes.getNode(config.noderedserver)
-            return true;
-        }
-        else {
-            node.error(RED._("nodered.errors.no-server"));
-            return false;
-        }
-
-    }
 
     function NodeREDAPIModuleNode(config) {
         RED.nodes.createNode(this,config);
@@ -49,7 +35,7 @@ module.exports = function(RED) {
 
         // node.status({});
 
-        node.status({fill:"blue",shape:"dot",text:"init"});
+        setTimeout(() => {node.status({fill:"gray",shape:"dot",text:"nodered.module.initialised"})}, 0);
 
         // const options = {
         //     prefixUrl: node.server.url,
@@ -63,10 +49,79 @@ module.exports = function(RED) {
         //     } 
         // }
 
-        node.upload = function(msg, nodeSend, nodeDone) {
+        node.get = function(msg, nodeSend, nodeDone) {
             var preRequestTimestamp = process.hrtime();
 
-            node.status({fill:"blue",shape:"dot",text:"nodered.status.requesting"});
+
+            var path = `nodes`;
+            var options = {};
+            options = {
+                prefixUrl: node.server.url,
+                path: "nodes",
+                method: "GET",
+                headers: {
+                    "Accept": "application/json"
+                },
+            }
+
+            if (msg.auth_required && msg.token) {
+                node.error("token: " + JSON.stringify(msg.token));
+                node.status({fill:"blue",shape:"dot",text:"nodered.module.got_token"});
+                // node.status({fill:"blue",shape:"dot",text:"nodered.status.requesting"});
+                token = msg.token.token_type+' '+msg.token.access_token;
+                options.headers["Authorization"] = token;
+            } else {
+            }
+            
+            got(options).then((res) => {
+                node.status({fill:"green",shape:"dot",text:"nodered.module.success"});
+                var obj = {
+                    "modules": JSON.parse(res.body),
+                    status: true
+                };
+                msg[sectionname] = Object.assign(msg[sectionname] || {}, obj)
+                node.send(msg);
+                nodeDone();
+            }, (error) => {
+                if (
+                    error.response
+                    && error.response.statusCode == 400
+                    && error.response.body == '{"code":"module_already_loaded","message":"Module already loaded"}'
+                ) {
+                    // node.error(error);
+                    // node.error("Success but already loaded: " + error.response.body);
+                    node.status({fill:"green",shape:"dot",text:"nodered.module.success"});
+                    var obj = {
+                        message: JSON.parse(error.response.body),
+                        status: true,
+                    }
+                    msg[sectionname] = Object.assign(msg[sectionname] || {}, obj)
+                    node.send(msg);
+                    nodeDone();
+                }
+                else {
+                    throw error
+                }
+            }).catch((error) => {
+                node.error(`Failed: ${error}`);
+                node.status({fill:"red",shape:"dot",text:"nodered.admin.failed"});
+                if (error.response) {
+                    node.error(`Statuscode: ${error.response.statusCode}, response: ${error.response.body}`);
+                    var obj = {
+                        message: JSON.parse(error.response.body),
+                        status: false,
+                    }
+                    msg[sectionname] = Object.assign(msg[sectionname] || {}, obj)
+                    node.send(msg);
+                    nodeDone();
+                }
+            });
+        }
+
+        node.add = function(msg, nodeSend, nodeDone) {
+            var preRequestTimestamp = process.hrtime();
+
+            const pipeline = promisify(stream.pipeline);
 
             var path = `nodes`;
             var FormData = require('form-data');
@@ -100,7 +155,7 @@ module.exports = function(RED) {
 
             if (msg.token) {
                 node.error("token: " + JSON.stringify(msg.token));
-                node.status({fill:"blue",shape:"dot",text:"nodered.status.got_token"});
+                node.status({fill:"blue",shape:"dot",text:"nodered.module.got_token"});
                 // node.status({fill:"blue",shape:"dot",text:"nodered.status.requesting"});
                 token = msg.token.token_type+' '+msg.token.access_token;
                 options.headers = {
@@ -118,34 +173,46 @@ module.exports = function(RED) {
             //     console.log('error:', error);
             // }
             got(options).then((res, err) => {
-                node.error(err);
-                node.error("Success: " + res.body);
-                msg.payload = res.body;
+                node.status({fill:"green",shape:"dot",text:"nodered.module.success"});
+                var obj = {
+                    payload: res.body,
+                    status: true,
+                }
+                msg[sectionname] = Object.assign(msg[sectionname] || {}, obj)
                 node.send(msg);
-                msg.status = true;
+                nodeDone();
             }, (error) => {
-                //node.error(`Failed: ${error}, Statuscode: ${error.response.statusCode}, response: ${error.response.body}`);
                 if (
                     error.response
                     && error.response.statusCode == 400
                     && error.response.body == '{"code":"module_already_loaded","message":"Module already loaded"}'
                 ) {
                     // node.error(error);
-                    node.error("Success but already loaded: " + error.response.body);
-                    msg.payload = JSON.parse(error.response.body);
+                    // node.log("Success but already loaded: " + error.response.body);
+                    node.status({fill:"green",shape:"dot",text:"nodered.module.success"});
+                    var obj = {
+                        message: JSON.parse(error.response.body),
+                        status: true,
+                    }
+                    msg[sectionname] = Object.assign(msg[sectionname] || {}, obj)
                     node.send(msg);
-                    msg.status = true;
+                    nodeDone();
                 }
                 else {
                     throw error
                 }
             }).catch((error) => {
                 node.error(`Failed: ${error}`);
+                node.status({fill:"red",shape:"dot",text:"nodered.module.failed"});
                 if (error.response) {
                     node.error(`Statuscode: ${error.response.statusCode}, response: ${error.response.body}`);
-                    msg.payload = JSON.parse(error.response.body);
-                    msg.status = false;
+                    var obj = {
+                        message: JSON.parse(error.response.body),
+                        status: false,
+                    }
+                    msg[sectionname] = Object.assign(msg[sectionname] || {}, obj)
                     node.send(msg);
+                    nodeDone();
                 }
             });
 
@@ -164,7 +231,21 @@ module.exports = function(RED) {
         }
 
         node.on('input', function(msg, nodeSend, nodeDone) {
-            node.upload(msg, nodeSend, nodeDone);
+            node.status({fill:"blue",shape:"dot",text:"nodered.status.requesting"});
+
+            switch (node.config.function) {
+                case "Get":
+                    node.get(msg, nodeSend, nodeDone);
+                    break;
+                case "Add":
+                    node.add(msg, nodeSend, nodeDone);
+                    break;
+                case "Remove":
+                    node.remove(msg, nodeSend, nodeDone);
+                    break;
+                default:
+                    throw `Error: ${node.config.function} not recognised.`
+            }
             //nodeSend(msg);
             nodeDone();
         });
