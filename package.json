@@ -7,13 +7,13 @@
     "pack": "npm pack",
     "upload": "curl -X POST --compressed -F tarball=@'nodered-nodes-noderedapi-0.1.0.tgz' 'http://localhost:1880/nodes'",
     "delete": "curl 'http://localhost:30000/nodes/nodered-nodes-nodesapi' -X DELETE",
-    "testserver": "docker run -d -p 30000:1880 --name mynodered -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`/:/local/ --group-add $(getent group docker | cut -d: -f3)  nodered/node-red",
-    "testsetup": "docker exec mynodered npm install node-red-contrib-dockerode",
-    "testinstall": "docker exec mynodered npm install /local/",
-    "testrestart": "docker restart mynodered",
-    "testlogs": "docker logs -f mynodered",
-    "testremove": "docker rm -f mynodered",
-    "testlogin": "docker exec -it mynodered bash"
+    "server": "docker run -d -p 30000:1880 --name noderedadminapi -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`/:/local/ --group-add $(getent group docker | cut -d: -f3)  nodered/node-red",
+    "setup": "docker exec noderedadminapi install node-red-contrib-dockerode",
+    "install": "docker exec noderedadminapi npm install /local/",
+    "restart": "docker restart noderedadminapi",
+    "logs": "docker logs -f noderedadminapi",
+    "remove": "docker rm -f noderedadminapi",
+    "login": "docker exec -it noderedadminapi bash"
   },
   "repository": {
     "type": "git",
