@@ -1,0 +1,594 @@
+[
+    {
+        "id": "079128f37ad5f6de",
+        "type": "subflow",
+        "name": "Test Subflow including subflow",
+        "info": "This is a subflow which contains a encapsulated subflow.",
+        "category": "nodered",
+        "in": [
+            {
+                "x": 60,
+                "y": 40,
+                "wires": [
+                    {
+                        "id": "5ac020f96cd1d3dc"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 560,
+                "y": 40,
+                "wires": [
+                    {
+                        "id": "5ac020f96cd1d3dc",
+                        "port": 1
+                    }
+                ]
+            },
+            {
+                "x": 560,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "5ac020f96cd1d3dc",
+                        "port": 2
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "env_name",
+                "type": "str",
+                "value": "TZ"
+            },
+            {
+                "name": "env_default",
+                "type": "str",
+                "value": "Level above string"
+            }
+        ],
+        "meta": {
+            "module": "test_subflow_including_subflow",
+            "type": "test_subflow_including_subflow",
+            "version": "0.0.1",
+            "author": "munnox",
+            "desc": "Allow a subflow to call a subflow toget a env variable into a payload to test importing subflows",
+            "keywords": "testing,environment",
+            "license": "GPL-3.0"
+        },
+        "color": "#A6BBCF"
+    },
+    {
+        "id": "5ac020f96cd1d3dc",
+        "type": "subflow:514b2fcbc2901f9c",
+        "z": "079128f37ad5f6de",
+        "name": "",
+        "env": [
+            {
+                "name": "env_name",
+                "value": "env_name",
+                "type": "env"
+            },
+            {
+                "name": "env_default",
+                "value": "env_default",
+                "type": "env"
+            }
+        ],
+        "x": 310,
+        "y": 40,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "514b2fcbc2901f9c",
+        "type": "subflow",
+        "name": "Test Subflow Add Payload",
+        "info": "",
+        "category": "nodered",
+        "in": [
+            {
+                "x": 60,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "c71c34bce12bcc5e"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 420,
+                "y": 200,
+                "wires": [
+                    {
+                        "id": "307f78e4b9e1cd2f",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 460,
+                "y": 260,
+                "wires": [
+                    {
+                        "id": "307f78e4b9e1cd2f",
+                        "port": 1
+                    }
+                ]
+            },
+            {
+                "x": 460,
+                "y": 320,
+                "wires": [
+                    {
+                        "id": "307f78e4b9e1cd2f",
+                        "port": 2
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "env_name",
+                "type": "str",
+                "value": "HOSTNAME"
+            },
+            {
+                "name": "env_default",
+                "type": "str",
+                "value": "Added a string payload to the msg."
+            }
+        ],
+        "meta": {
+            "module": "test_subflows_add_env_payload",
+            "type": "test_subflows_add_env_payload",
+            "version": "0.0.1",
+            "author": "munnox",
+            "desc": "Allow a subflow to get a env variable into a payload to test importing subflows",
+            "keywords": "testing,enviroment",
+            "license": "GPL-3.0"
+        },
+        "color": "#3FADB5",
+        "outputLabels": [
+            "Message",
+            "Env Name Used Only",
+            "Env Default Used Only"
+        ],
+        "icon": "node-red/swap.svg"
+    },
+    {
+        "id": "baa0bbe71c9e39da",
+        "type": "function",
+        "z": "514b2fcbc2901f9c",
+        "name": "Add string payload from enviroment using message",
+        "func": "// Get a enviroment variable based on the name\n// in the subflow parameter\nvar env_name = env.get(\"env_name\")\nif(msg.env_name !== undefined) {\n    env_name = msg.env_name;\n}\nvar env_default = env.get(\"env_default\")\nif (msg.env_default !== undefined) {\n    env_default = msg.env_default;\n}\nvar env_string = env.get(env_name);\n// If a result cannot be found use the default parameter\nif(env_string === undefined) {\n    env_string = env_default;\n    node.warn(`Not found using ${env_name}. Using env default`);\n}\nmsg.payload = env_string;\n\n// extra docs\n// with new name\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 120,
+        "wires": [
+            [
+                "307f78e4b9e1cd2f"
+            ]
+        ]
+    },
+    {
+        "id": "c71c34bce12bcc5e",
+        "type": "change",
+        "z": "514b2fcbc2901f9c",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Default Set",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 180,
+        "y": 60,
+        "wires": [
+            [
+                "baa0bbe71c9e39da"
+            ]
+        ]
+    },
+    {
+        "id": "307f78e4b9e1cd2f",
+        "type": "switch",
+        "z": "514b2fcbc2901f9c",
+        "name": "Test for default",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "else"
+            },
+            {
+                "t": "neq",
+                "v": "env_default",
+                "vt": "env"
+            },
+            {
+                "t": "eq",
+                "v": "env_default",
+                "vt": "env"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 200,
+        "y": 200,
+        "wires": [
+            [],
+            [],
+            []
+        ],
+        "outputLabels": [
+            "Always",
+            "Env Name Found",
+            "Env Default Detected"
+        ]
+    },
+    {
+        "id": "fd3f499d8696771a",
+        "type": "tab",
+        "label": "Flow for testing test subflow",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "22e17fec88dab28e",
+        "type": "subflow:514b2fcbc2901f9c",
+        "z": "fd3f499d8696771a",
+        "name": "",
+        "x": 450,
+        "y": 280,
+        "wires": [
+            [
+                "504c69b21f312daa"
+            ],
+            [
+                "11744658e9bf7a29"
+            ],
+            [
+                "6f95bb3ddc437daf"
+            ]
+        ]
+    },
+    {
+        "id": "9f57838cdb58c938",
+        "type": "inject",
+        "z": "fd3f499d8696771a",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "env_name",
+                "v": "TZ",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 200,
+        "y": 280,
+        "wires": [
+            [
+                "22e17fec88dab28e"
+            ]
+        ]
+    },
+    {
+        "id": "504c69b21f312daa",
+        "type": "debug",
+        "z": "fd3f499d8696771a",
+        "name": "Normal",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "11744658e9bf7a29",
+        "type": "debug",
+        "z": "fd3f499d8696771a",
+        "name": "ENV Found",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "6f95bb3ddc437daf",
+        "type": "debug",
+        "z": "fd3f499d8696771a",
+        "name": "ENV Default",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "079615df23e8aa78",
+        "type": "subflow:079128f37ad5f6de",
+        "z": "fd3f499d8696771a",
+        "name": "",
+        "x": 450,
+        "y": 480,
+        "wires": [
+            [
+                "67d28bae7caf144f"
+            ],
+            [
+                "1c3752a67355c4c2"
+            ]
+        ]
+    },
+    {
+        "id": "93dce6e093ce2cbe",
+        "type": "inject",
+        "z": "fd3f499d8696771a",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "env_names",
+                "v": "HOME",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 200,
+        "y": 480,
+        "wires": [
+            [
+                "079615df23e8aa78"
+            ]
+        ]
+    },
+    {
+        "id": "67d28bae7caf144f",
+        "type": "debug",
+        "z": "fd3f499d8696771a",
+        "name": "ENV Found",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "1c3752a67355c4c2",
+        "type": "debug",
+        "z": "fd3f499d8696771a",
+        "name": "ENV Default",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "9302a49b95c33a3d",
+        "type": "inject",
+        "z": "fd3f499d8696771a",
+        "name": "Subflow",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[{\"id\":\"514b2fcbc2901f9c\",\"type\":\"subflow\",\"name\":\"Test Subflow Add Payload\",\"info\":\"\",\"category\":\"RAM Custom Subflows\",\"in\":[{\"x\":60,\"y\":60,\"wires\":[{\"id\":\"c71c34bce12bcc5e\"}]}],\"out\":[{\"x\":420,\"y\":200,\"wires\":[{\"id\":\"307f78e4b9e1cd2f\",\"port\":0}]},{\"x\":460,\"y\":260,\"wires\":[{\"id\":\"307f78e4b9e1cd2f\",\"port\":1}]},{\"x\":460,\"y\":320,\"wires\":[{\"id\":\"307f78e4b9e1cd2f\",\"port\":2}]}],\"env\":[{\"name\":\"env_name\",\"type\":\"str\",\"value\":\"HOSTNAME\"},{\"name\":\"env_default\",\"type\":\"str\",\"value\":\"Added a string payload to the msg.\"}],\"meta\":{\"module\":\"test_subflows_add_env_payload\",\"type\":\"test_subflows_add_env_payload\",\"version\":\"0.0.1\",\"author\":\"munnox\",\"desc\":\"Allow a subflow to get a env variable into a payload to test importing subflows\",\"keywords\":\"testing,enviroment\",\"license\":\"GPL-3.0\"},\"color\":\"#3FADB5\",\"outputLabels\":[\"Message\",\"Env Name Used Only\",\"Env Default Used Only\"],\"icon\":\"node-red/swap.svg\"},{\"id\":\"baa0bbe71c9e39da\",\"type\":\"function\",\"z\":\"514b2fcbc2901f9c\",\"name\":\"Add string payload from enviroment using message\",\"func\":\"// Get a enviroment variable based on the name\\n// in the subflow parameter\\nvar env_name = env.get(\\\"env_name\\\")\\nif(msg.env_name !== undefined) {\\n    env_name = msg.env_name;\\n}\\nvar env_default = env.get(\\\"env_default\\\")\\nif (msg.env_default !== undefined) {\\n    env_default = msg.env_default;\\n}\\nvar env_string = env.get(env_name);\\n// If a result cannot be found use the default parameter\\nif(env_string === undefined) {\\n    env_string = env_default;\\n    node.warn(`Not found using ${env_name}. Using env default`);\\n}\\nmsg.payload = env_string;\\n\\n// extra docs\\n// with new name\\nreturn msg;\",\"outputs\":1,\"noerr\":0,\"initialize\":\"\",\"finalize\":\"\",\"libs\":[],\"x\":270,\"y\":120,\"wires\":[[\"307f78e4b9e1cd2f\"]]},{\"id\":\"c71c34bce12bcc5e\",\"type\":\"change\",\"z\":\"514b2fcbc2901f9c\",\"name\":\"\",\"rules\":[{\"t\":\"set\",\"p\":\"payload\",\"pt\":\"msg\",\"to\":\"Default Set\",\"tot\":\"str\"}],\"action\":\"\",\"property\":\"\",\"from\":\"\",\"to\":\"\",\"reg\":false,\"x\":180,\"y\":60,\"wires\":[[\"baa0bbe71c9e39da\"]]},{\"id\":\"307f78e4b9e1cd2f\",\"type\":\"switch\",\"z\":\"514b2fcbc2901f9c\",\"name\":\"Test for default\",\"property\":\"payload\",\"propertyType\":\"msg\",\"rules\":[{\"t\":\"else\"},{\"t\":\"neq\",\"v\":\"env_default\",\"vt\":\"env\"},{\"t\":\"eq\",\"v\":\"env_default\",\"vt\":\"env\"}],\"checkall\":\"true\",\"repair\":false,\"outputs\":3,\"x\":200,\"y\":200,\"wires\":[[],[],[]],\"outputLabels\":[\"Always\",\"Env Name Found\",\"Env Default Detected\"]},{\"id\":\"22e17fec88dab28e\",\"type\":\"subflow:514b2fcbc2901f9c\",\"z\":\"fd3f499d8696771a\",\"name\":\"\",\"x\":450,\"y\":160,\"wires\":[[\"504c69b21f312daa\"],[\"11744658e9bf7a29\"],[\"6f95bb3ddc437daf\"]]}]",
+        "payloadType": "json",
+        "x": 330,
+        "y": 60,
+        "wires": [
+            [
+                "388269509b8d4de8",
+                "c81089f99b039041"
+            ]
+        ]
+    },
+    {
+        "id": "f87edd14810145e7",
+        "type": "inject",
+        "z": "fd3f499d8696771a",
+        "name": "Subflow with Subflow",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[{\"id\":\"514b2fcbc2901f9c\",\"type\":\"subflow\",\"name\":\"Test Subflow Add Payload\",\"info\":\"\",\"category\":\"RAM Custom Subflows\",\"in\":[{\"x\":60,\"y\":60,\"wires\":[{\"id\":\"c71c34bce12bcc5e\"}]}],\"out\":[{\"x\":420,\"y\":200,\"wires\":[{\"id\":\"307f78e4b9e1cd2f\",\"port\":0}]},{\"x\":460,\"y\":260,\"wires\":[{\"id\":\"307f78e4b9e1cd2f\",\"port\":1}]},{\"x\":460,\"y\":320,\"wires\":[{\"id\":\"307f78e4b9e1cd2f\",\"port\":2}]}],\"env\":[{\"name\":\"env_name\",\"type\":\"str\",\"value\":\"HOSTNAME\"},{\"name\":\"env_default\",\"type\":\"str\",\"value\":\"Added a string payload to the msg.\"}],\"meta\":{\"module\":\"test_subflows_add_env_payload\",\"type\":\"test_subflows_add_env_payload\",\"version\":\"0.0.1\",\"author\":\"munnox\",\"desc\":\"Allow a subflow to get a env variable into a payload to test importing subflows\",\"keywords\":\"testing,enviroment\",\"license\":\"GPL-3.0\"},\"color\":\"#3FADB5\",\"outputLabels\":[\"Message\",\"Env Name Used Only\",\"Env Default Used Only\"],\"icon\":\"node-red/swap.svg\"},{\"id\":\"baa0bbe71c9e39da\",\"type\":\"function\",\"z\":\"514b2fcbc2901f9c\",\"name\":\"Add string payload from enviroment using message\",\"func\":\"// Get a enviroment variable based on the name\\n// in the subflow parameter\\nvar env_name = env.get(\\\"env_name\\\")\\nif(msg.env_name !== undefined) {\\n    env_name = msg.env_name;\\n}\\nvar env_default = env.get(\\\"env_default\\\")\\nif (msg.env_default !== undefined) {\\n    env_default = msg.env_default;\\n}\\nvar env_string = env.get(env_name);\\n// If a result cannot be found use the default parameter\\nif(env_string === undefined) {\\n    env_string = env_default;\\n    node.warn(`Not found using ${env_name}. Using env default`);\\n}\\nmsg.payload = env_string;\\n\\n// extra docs\\n// with new name\\nreturn msg;\",\"outputs\":1,\"noerr\":0,\"initialize\":\"\",\"finalize\":\"\",\"libs\":[],\"x\":270,\"y\":120,\"wires\":[[\"307f78e4b9e1cd2f\"]]},{\"id\":\"c71c34bce12bcc5e\",\"type\":\"change\",\"z\":\"514b2fcbc2901f9c\",\"name\":\"\",\"rules\":[{\"t\":\"set\",\"p\":\"payload\",\"pt\":\"msg\",\"to\":\"Default Set\",\"tot\":\"str\"}],\"action\":\"\",\"property\":\"\",\"from\":\"\",\"to\":\"\",\"reg\":false,\"x\":180,\"y\":60,\"wires\":[[\"baa0bbe71c9e39da\"]]},{\"id\":\"307f78e4b9e1cd2f\",\"type\":\"switch\",\"z\":\"514b2fcbc2901f9c\",\"name\":\"Test for default\",\"property\":\"payload\",\"propertyType\":\"msg\",\"rules\":[{\"t\":\"else\"},{\"t\":\"neq\",\"v\":\"env_default\",\"vt\":\"env\"},{\"t\":\"eq\",\"v\":\"env_default\",\"vt\":\"env\"}],\"checkall\":\"true\",\"repair\":false,\"outputs\":3,\"x\":200,\"y\":200,\"wires\":[[],[],[]],\"outputLabels\":[\"Always\",\"Env Name Found\",\"Env Default Detected\"]},{\"id\":\"079128f37ad5f6de\",\"type\":\"subflow\",\"name\":\"Test Subflow including subflow\",\"info\":\"This is a subflow which contains a encapsulated subflow.\",\"category\":\"subflow_nodes\",\"in\":[{\"x\":60,\"y\":40,\"wires\":[{\"id\":\"5ac020f96cd1d3dc\"}]}],\"out\":[{\"x\":560,\"y\":40,\"wires\":[{\"id\":\"5ac020f96cd1d3dc\",\"port\":1}]},{\"x\":560,\"y\":120,\"wires\":[{\"id\":\"5ac020f96cd1d3dc\",\"port\":2}]}],\"env\":[{\"name\":\"env_name\",\"type\":\"str\",\"value\":\"TZ\"},{\"name\":\"env_default\",\"type\":\"str\",\"value\":\"Level above string\"}],\"meta\":{\"module\":\"test_subflow_including_subflow\",\"type\":\"test_subflow_including_subflow\",\"version\":\"0.0.1\",\"author\":\"munnox\",\"desc\":\"Allow a subflow to call a subflow toget a env variable into a payload to test importing subflows\",\"keywords\":\"testing,environment\",\"license\":\"GPL-3.0\"},\"color\":\"#A6BBCF\"},{\"id\":\"5ac020f96cd1d3dc\",\"type\":\"subflow:514b2fcbc2901f9c\",\"z\":\"079128f37ad5f6de\",\"name\":\"\",\"env\":[{\"name\":\"env_name\",\"value\":\"env_name\",\"type\":\"env\"},{\"name\":\"env_default\",\"value\":\"env_default\",\"type\":\"env\"}],\"x\":310,\"y\":40,\"wires\":[[],[],[]]},{\"id\":\"079615df23e8aa78\",\"type\":\"subflow:079128f37ad5f6de\",\"z\":\"fd3f499d8696771a\",\"name\":\"\",\"x\":450,\"y\":480,\"wires\":[[\"67d28bae7caf144f\"],[\"1c3752a67355c4c2\"]]}]",
+        "payloadType": "json",
+        "x": 280,
+        "y": 100,
+        "wires": [
+            [
+                "388269509b8d4de8",
+                "c81089f99b039041"
+            ]
+        ]
+    },
+    {
+        "id": "388269509b8d4de8",
+        "type": "function",
+        "z": "fd3f499d8696771a",
+        "name": "",
+        "func": "\n\nfunction copy(obj) {\n    return JSON.parse(JSON.stringify(obj));\n}\nlet exportJSON = copy(msg.payload);\n\nlet subflows = [];\nfor (var i = 0; i < exportJSON.length-1; i++) {\n    if (exportJSON[i].type == \"subflow\") {\n        let subflow = copy(exportJSON[i]);\n        subflow.flow = [];\n        subflows.push(subflow);\n    }\n}\nfor (var i = 0; i < subflows.length; i++) {\n    let subflow = subflows[i];\n    // subflow.flow = [];\n    for (var j = 0; j < exportJSON.length - 1; j++) {\n        if (exportJSON[j].z == subflow.id) {\n            let flow_element = copy(exportJSON[j]);\n            subflow.flow.push(flow_element);\n        }\n        \n    }\n    //subflows[i] = subflow;\n}\n\n// let sub_flow = copy(exportJSON[0]);\n// let flow_elements = copy(exportJSON.slice(1, -1));\n// sub_flow.flow = flow_elements;\n\nlet subflowJSON = copy(subflows);\n\nlet flow_breakup = {\n    \"length\": msg.payload.length,\n    \"subflow\": copy(msg.payload[0]),\n    \"flow\": copy(msg.payload.slice(1, -1)),\n    \"display\": copy(msg.payload[msg.payload.length - 1]),\n    \"finished_flow\": subflowJSON\n}\nmsg.payload = flow_breakup\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 100,
+        "wires": [
+            [
+                "c81089f99b039041"
+            ]
+        ]
+    },
+    {
+        "id": "c81089f99b039041",
+        "type": "debug",
+        "z": "fd3f499d8696771a",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "6b9d4e9c5fa13fa4",
+        "type": "inject",
+        "z": "fd3f499d8696771a",
+        "name": "Full Flow",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "[{\"id\":\"079128f37ad5f6de\",\"type\":\"subflow\",\"name\":\"Test Subflow including subflow\",\"info\":\"This is a subflow which contains a encapsulated subflow.\",\"category\":\"subflow_nodes\",\"in\":[{\"x\":60,\"y\":40,\"wires\":[{\"id\":\"5ac020f96cd1d3dc\"}]}],\"out\":[{\"x\":560,\"y\":40,\"wires\":[{\"id\":\"5ac020f96cd1d3dc\",\"port\":1}]},{\"x\":560,\"y\":120,\"wires\":[{\"id\":\"5ac020f96cd1d3dc\",\"port\":2}]}],\"env\":[{\"name\":\"env_name\",\"type\":\"str\",\"value\":\"TZ\"},{\"name\":\"env_default\",\"type\":\"str\",\"value\":\"Level above string\"}],\"meta\":{\"module\":\"test_subflow_including_subflow\",\"type\":\"test_subflow_including_subflow\",\"version\":\"0.0.1\",\"author\":\"munnox\",\"desc\":\"Allow a subflow to call a subflow toget a env variable into a payload to test importing subflows\",\"keywords\":\"testing,environment\",\"license\":\"GPL-3.0\"},\"color\":\"#A6BBCF\"},{\"id\":\"5ac020f96cd1d3dc\",\"type\":\"subflow:514b2fcbc2901f9c\",\"z\":\"079128f37ad5f6de\",\"name\":\"\",\"env\":[{\"name\":\"env_name\",\"value\":\"env_name\",\"type\":\"env\"},{\"name\":\"env_default\",\"value\":\"env_default\",\"type\":\"env\"}],\"x\":310,\"y\":40,\"wires\":[[],[],[]]},{\"id\":\"514b2fcbc2901f9c\",\"type\":\"subflow\",\"name\":\"Test Subflow Add Payload\",\"info\":\"\",\"category\":\"RAM Custom Subflows\",\"in\":[{\"x\":60,\"y\":60,\"wires\":[{\"id\":\"c71c34bce12bcc5e\"}]}],\"out\":[{\"x\":420,\"y\":200,\"wires\":[{\"id\":\"307f78e4b9e1cd2f\",\"port\":0}]},{\"x\":460,\"y\":260,\"wires\":[{\"id\":\"307f78e4b9e1cd2f\",\"port\":1}]},{\"x\":460,\"y\":320,\"wires\":[{\"id\":\"307f78e4b9e1cd2f\",\"port\":2}]}],\"env\":[{\"name\":\"env_name\",\"type\":\"str\",\"value\":\"HOSTNAME\"},{\"name\":\"env_default\",\"type\":\"str\",\"value\":\"Added a string payload to the msg.\"}],\"meta\":{\"module\":\"test_subflows_add_env_payload\",\"type\":\"test_subflows_add_env_payload\",\"version\":\"0.0.1\",\"author\":\"munnox\",\"desc\":\"Allow a subflow to get a env variable into a payload to test importing subflows\",\"keywords\":\"testing,enviroment\",\"license\":\"GPL-3.0\"},\"color\":\"#3FADB5\",\"outputLabels\":[\"Message\",\"Env Name Used Only\",\"Env Default Used Only\"],\"icon\":\"node-red/swap.svg\"},{\"id\":\"baa0bbe71c9e39da\",\"type\":\"function\",\"z\":\"514b2fcbc2901f9c\",\"name\":\"Add string payload from enviroment using message\",\"func\":\"// Get a enviroment variable based on the name\\n// in the subflow parameter\\nvar env_name = env.get(\\\"env_name\\\")\\nif(msg.env_name !== undefined) {\\n    env_name = msg.env_name;\\n}\\nvar env_default = env.get(\\\"env_default\\\")\\nif (msg.env_default !== undefined) {\\n    env_default = msg.env_default;\\n}\\nvar env_string = env.get(env_name);\\n// If a result cannot be found use the default parameter\\nif(env_string === undefined) {\\n    env_string = env_default;\\n    node.warn(`Not found using ${env_name}. Using env default`);\\n}\\nmsg.payload = env_string;\\n\\n// extra docs\\n// with new name\\nreturn msg;\",\"outputs\":1,\"noerr\":0,\"initialize\":\"\",\"finalize\":\"\",\"libs\":[],\"x\":270,\"y\":120,\"wires\":[[\"307f78e4b9e1cd2f\"]]},{\"id\":\"c71c34bce12bcc5e\",\"type\":\"change\",\"z\":\"514b2fcbc2901f9c\",\"name\":\"\",\"rules\":[{\"t\":\"set\",\"p\":\"payload\",\"pt\":\"msg\",\"to\":\"Default Set\",\"tot\":\"str\"}],\"action\":\"\",\"property\":\"\",\"from\":\"\",\"to\":\"\",\"reg\":false,\"x\":180,\"y\":60,\"wires\":[[\"baa0bbe71c9e39da\"]]},{\"id\":\"307f78e4b9e1cd2f\",\"type\":\"switch\",\"z\":\"514b2fcbc2901f9c\",\"name\":\"Test for default\",\"property\":\"payload\",\"propertyType\":\"msg\",\"rules\":[{\"t\":\"else\"},{\"t\":\"neq\",\"v\":\"env_default\",\"vt\":\"env\"},{\"t\":\"eq\",\"v\":\"env_default\",\"vt\":\"env\"}],\"checkall\":\"true\",\"repair\":false,\"outputs\":3,\"x\":200,\"y\":200,\"wires\":[[],[],[]],\"outputLabels\":[\"Always\",\"Env Name Found\",\"Env Default Detected\"]},{\"id\":\"fd3f499d8696771a\",\"type\":\"tab\",\"label\":\"Flow for testing test subflow\",\"disabled\":false,\"info\":\"\",\"env\":[]},{\"id\":\"22e17fec88dab28e\",\"type\":\"subflow:514b2fcbc2901f9c\",\"z\":\"fd3f499d8696771a\",\"name\":\"\",\"x\":450,\"y\":160,\"wires\":[[\"504c69b21f312daa\"],[\"11744658e9bf7a29\"],[\"6f95bb3ddc437daf\"]]},{\"id\":\"9f57838cdb58c938\",\"type\":\"inject\",\"z\":\"fd3f499d8696771a\",\"name\":\"\",\"props\":[{\"p\":\"payload\"},{\"p\":\"env_name\",\"v\":\"TZ\",\"vt\":\"str\"}],\"repeat\":\"\",\"crontab\":\"\",\"once\":false,\"onceDelay\":0.1,\"topic\":\"\",\"payload\":\"\",\"payloadType\":\"date\",\"x\":200,\"y\":160,\"wires\":[[\"22e17fec88dab28e\"]]},{\"id\":\"504c69b21f312daa\",\"type\":\"debug\",\"z\":\"fd3f499d8696771a\",\"name\":\"Normal\",\"active\":true,\"tosidebar\":true,\"console\":false,\"tostatus\":false,\"complete\":\"payload\",\"targetType\":\"msg\",\"statusVal\":\"\",\"statusType\":\"auto\",\"x\":700,\"y\":140,\"wires\":[]},{\"id\":\"11744658e9bf7a29\",\"type\":\"debug\",\"z\":\"fd3f499d8696771a\",\"name\":\"ENV Found\",\"active\":true,\"tosidebar\":true,\"console\":false,\"tostatus\":false,\"complete\":\"payload\",\"targetType\":\"msg\",\"statusVal\":\"\",\"statusType\":\"auto\",\"x\":710,\"y\":180,\"wires\":[]},{\"id\":\"6f95bb3ddc437daf\",\"type\":\"debug\",\"z\":\"fd3f499d8696771a\",\"name\":\"ENV Default\",\"active\":true,\"tosidebar\":true,\"console\":false,\"tostatus\":false,\"complete\":\"payload\",\"targetType\":\"msg\",\"statusVal\":\"\",\"statusType\":\"auto\",\"x\":710,\"y\":220,\"wires\":[]},{\"id\":\"0258ae7cb0879a95\",\"type\":\"function\",\"z\":\"fd3f499d8696771a\",\"name\":\"\",\"func\":\"\\nreturn msg;\",\"outputs\":1,\"noerr\":0,\"initialize\":\"\",\"finalize\":\"\",\"libs\":[],\"x\":480,\"y\":380,\"wires\":[[]]},{\"id\":\"079615df23e8aa78\",\"type\":\"subflow:079128f37ad5f6de\",\"z\":\"fd3f499d8696771a\",\"name\":\"\",\"x\":450,\"y\":480,\"wires\":[[\"67d28bae7caf144f\"],[\"1c3752a67355c4c2\"]]},{\"id\":\"f944a0a9cbea6e0c\",\"type\":\"inject\",\"z\":\"fd3f499d8696771a\",\"name\":\"\",\"props\":[{\"p\":\"payload\"},{\"p\":\"env_name\",\"v\":\"TZ\",\"vt\":\"str\"}],\"repeat\":\"\",\"crontab\":\"\",\"once\":false,\"onceDelay\":0.1,\"topic\":\"\",\"payload\":\"\",\"payloadType\":\"date\",\"x\":200,\"y\":280,\"wires\":[[\"108b6590792c995b\"]]},{\"id\":\"108b6590792c995b\",\"type\":\"debug\",\"z\":\"fd3f499d8696771a\",\"name\":\"Normal\",\"active\":true,\"tosidebar\":true,\"console\":false,\"tostatus\":false,\"complete\":\"payload\",\"targetType\":\"msg\",\"statusVal\":\"\",\"statusType\":\"auto\",\"x\":700,\"y\":260,\"wires\":[]},{\"id\":\"fc0761cff509dcfe\",\"type\":\"debug\",\"z\":\"fd3f499d8696771a\",\"name\":\"ENV Found\",\"active\":true,\"tosidebar\":true,\"console\":false,\"tostatus\":false,\"complete\":\"payload\",\"targetType\":\"msg\",\"statusVal\":\"\",\"statusType\":\"auto\",\"x\":710,\"y\":300,\"wires\":[]},{\"id\":\"e1c340c1d25e3861\",\"type\":\"debug\",\"z\":\"fd3f499d8696771a\",\"name\":\"ENV Default\",\"active\":true,\"tosidebar\":true,\"console\":false,\"tostatus\":false,\"complete\":\"payload\",\"targetType\":\"msg\",\"statusVal\":\"\",\"statusType\":\"auto\",\"x\":710,\"y\":340,\"wires\":[]},{\"id\":\"93dce6e093ce2cbe\",\"type\":\"inject\",\"z\":\"fd3f499d8696771a\",\"name\":\"\",\"props\":[{\"p\":\"payload\"},{\"p\":\"env_names\",\"v\":\"HOME\",\"vt\":\"str\"}],\"repeat\":\"\",\"crontab\":\"\",\"once\":false,\"onceDelay\":0.1,\"topic\":\"\",\"payload\":\"\",\"payloadType\":\"date\",\"x\":200,\"y\":480,\"wires\":[[\"079615df23e8aa78\"]]},{\"id\":\"67d28bae7caf144f\",\"type\":\"debug\",\"z\":\"fd3f499d8696771a\",\"name\":\"ENV Found\",\"active\":true,\"tosidebar\":true,\"console\":false,\"tostatus\":false,\"complete\":\"payload\",\"targetType\":\"msg\",\"statusVal\":\"\",\"statusType\":\"auto\",\"x\":710,\"y\":460,\"wires\":[]},{\"id\":\"1c3752a67355c4c2\",\"type\":\"debug\",\"z\":\"fd3f499d8696771a\",\"name\":\"ENV Default\",\"active\":true,\"tosidebar\":true,\"console\":false,\"tostatus\":false,\"complete\":\"payload\",\"targetType\":\"msg\",\"statusVal\":\"\",\"statusType\":\"auto\",\"x\":710,\"y\":500,\"wires\":[]}]",
+        "payloadType": "json",
+        "x": 320,
+        "y": 140,
+        "wires": [
+            [
+                "388269509b8d4de8",
+                "c81089f99b039041"
+            ]
+        ]
+    },
+    {
+        "id": "d7c7cc595c4a7924",
+        "type": "comment",
+        "z": "fd3f499d8696771a",
+        "name": "Subflow transformation testing development area",
+        "info": "",
+        "x": 280,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "3c980b61d6053333",
+        "type": "comment",
+        "z": "fd3f499d8696771a",
+        "name": "Subflow for the lowest level",
+        "info": "",
+        "x": 390,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "4d8df875f470077e",
+        "type": "comment",
+        "z": "fd3f499d8696771a",
+        "name": "Subflow for the Next level the above is embedded with this",
+        "info": "",
+        "x": 390,
+        "y": 520,
+        "wires": []
+    }
+]

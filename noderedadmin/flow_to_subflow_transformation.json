@@ -1,0 +1,286 @@
+[
+    {
+        "id": "079128f37ad5f6de",
+        "type": "subflow",
+        "name": "Test Subflow including subflow",
+        "info": "This is a subflow which contains a encapsulated subflow.",
+        "category": "nodered",
+        "in": [
+            {
+                "x": 60,
+                "y": 40,
+                "wires": [
+                    {
+                        "id": "5ac020f96cd1d3dc"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 560,
+                "y": 40,
+                "wires": [
+                    {
+                        "id": "5ac020f96cd1d3dc",
+                        "port": 1
+                    }
+                ]
+            },
+            {
+                "x": 560,
+                "y": 120,
+                "wires": [
+                    {
+                        "id": "5ac020f96cd1d3dc",
+                        "port": 2
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "env_name",
+                "type": "str",
+                "value": "TZ"
+            },
+            {
+                "name": "env_default",
+                "type": "str",
+                "value": "Level above string"
+            }
+        ],
+        "meta": {
+            "module": "test_subflow_including_subflow",
+            "type": "test_subflow_including_subflow",
+            "version": "0.0.1",
+            "author": "munnox",
+            "desc": "Allow a subflow to call a subflow toget a env variable into a payload to test importing subflows",
+            "keywords": "testing,environment",
+            "license": "GPL-3.0"
+        },
+        "color": "#A6BBCF"
+    },
+    {
+        "id": "5ac020f96cd1d3dc",
+        "type": "subflow:514b2fcbc2901f9c",
+        "z": "079128f37ad5f6de",
+        "name": "",
+        "env": [
+            {
+                "name": "env_name",
+                "value": "env_name",
+                "type": "env"
+            },
+            {
+                "name": "env_default",
+                "value": "env_default",
+                "type": "env"
+            }
+        ],
+        "x": 310,
+        "y": 40,
+        "wires": [
+            [],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "514b2fcbc2901f9c",
+        "type": "subflow",
+        "name": "Test Subflow Add Payload",
+        "info": "",
+        "category": "nodered",
+        "in": [
+            {
+                "x": 60,
+                "y": 60,
+                "wires": [
+                    {
+                        "id": "c71c34bce12bcc5e"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 420,
+                "y": 200,
+                "wires": [
+                    {
+                        "id": "307f78e4b9e1cd2f",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 460,
+                "y": 260,
+                "wires": [
+                    {
+                        "id": "307f78e4b9e1cd2f",
+                        "port": 1
+                    }
+                ]
+            },
+            {
+                "x": 460,
+                "y": 320,
+                "wires": [
+                    {
+                        "id": "307f78e4b9e1cd2f",
+                        "port": 2
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "env_name",
+                "type": "str",
+                "value": "HOSTNAME"
+            },
+            {
+                "name": "env_default",
+                "type": "str",
+                "value": "Added a string payload to the msg."
+            }
+        ],
+        "meta": {
+            "module": "test_subflows_add_env_payload",
+            "type": "test_subflows_add_env_payload",
+            "version": "0.0.1",
+            "author": "munnox",
+            "desc": "Allow a subflow to get a env variable into a payload to test importing subflows",
+            "keywords": "testing,enviroment",
+            "license": "GPL-3.0"
+        },
+        "color": "#3FADB5",
+        "outputLabels": [
+            "Message",
+            "Env Name Used Only",
+            "Env Default Used Only"
+        ],
+        "icon": "node-red/swap.svg"
+    },
+    {
+        "id": "baa0bbe71c9e39da",
+        "type": "function",
+        "z": "514b2fcbc2901f9c",
+        "name": "Add string payload from enviroment using message",
+        "func": "// Get a enviroment variable based on the name\n// in the subflow parameter\nvar env_name = env.get(\"env_name\")\nif(msg.env_name !== undefined) {\n    env_name = msg.env_name;\n}\nvar env_default = env.get(\"env_default\")\nif (msg.env_default !== undefined) {\n    env_default = msg.env_default;\n}\nvar env_string = env.get(env_name);\n// If a result cannot be found use the default parameter\nif(env_string === undefined) {\n    env_string = env_default;\n    node.warn(`Not found using ${env_name}. Using env default`);\n}\nmsg.payload = env_string;\n\n// extra docs\n// with new name\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 120,
+        "wires": [
+            [
+                "307f78e4b9e1cd2f"
+            ]
+        ]
+    },
+    {
+        "id": "c71c34bce12bcc5e",
+        "type": "change",
+        "z": "514b2fcbc2901f9c",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Default Set",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 180,
+        "y": 60,
+        "wires": [
+            [
+                "baa0bbe71c9e39da"
+            ]
+        ]
+    },
+    {
+        "id": "307f78e4b9e1cd2f",
+        "type": "switch",
+        "z": "514b2fcbc2901f9c",
+        "name": "Test for default",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "else"
+            },
+            {
+                "t": "neq",
+                "v": "env_default",
+                "vt": "env"
+            },
+            {
+                "t": "eq",
+                "v": "env_default",
+                "vt": "env"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 200,
+        "y": 200,
+        "wires": [
+            [],
+            [],
+            []
+        ],
+        "outputLabels": [
+            "Always",
+            "Env Name Found",
+            "Env Default Detected"
+        ]
+    },
+    {
+        "id": "22e17fec88dab28e",
+        "type": "subflow:514b2fcbc2901f9c",
+        "z": "fd3f499d8696771a",
+        "name": "",
+        "x": 450,
+        "y": 280,
+        "wires": [
+            [
+                "504c69b21f312daa"
+            ],
+            [
+                "11744658e9bf7a29"
+            ],
+            [
+                "6f95bb3ddc437daf"
+            ]
+        ]
+    },
+    {
+        "id": "079615df23e8aa78",
+        "type": "subflow:079128f37ad5f6de",
+        "z": "fd3f499d8696771a",
+        "name": "",
+        "x": 450,
+        "y": 480,
+        "wires": [
+            [
+                "67d28bae7caf144f"
+            ],
+            [
+                "1c3752a67355c4c2"
+            ]
+        ]
+    }
+]

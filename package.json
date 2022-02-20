@@ -1,6 +1,6 @@
 {
   "name": "nodered-nodes-noderedapi",
-  "version": "0.1.1",
+  "version": "0.1.8",
   "description": "Plan to build a Node admin API node set keeping it fairly basic. But will allow me to go meta... :D",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@munnoxtech.com:nodered/nodered-nodes-noderedapi.git"
+    "url": "https://github.com/munnox/nodered-nodes-noderedapi"
   },
   "author": "Robert Munnoch",
   "license": "GPLv3",
@@ -26,7 +26,7 @@
       "noderedadmin-config": "noderedadmin/config.js",
       "noderedadmin-auth": "noderedadmin/auth.js",
       "noderedadmin-module": "noderedadmin/module.js",
-      "noderedadmin-test-example-subflow": "noderedadmin/test_example_subflow.js"
+      "noderedadmin-flow-to-subflow-transformation": "noderedadmin/flow_to_subflow_transformation.js"
     }
   },
   "dependencies": {
