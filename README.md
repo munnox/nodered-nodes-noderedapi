@@ -20,6 +20,14 @@ alias rmmod="curl 'http://localhost:30000/nodes/nodered-nodes-nodesapi' -X DELET
 npm install munnox/nodered-nodes-tiddlywiki
 ```
 
+Nodered Dependancies
+
+```json
+{
+    "nodered-nodes-noderedapi": "github:munnox/nodered-nodes-noderedapi#dev",
+}
+```
+
 ## Develop and test:
 
 ```bash

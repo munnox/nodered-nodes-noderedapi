@@ -1,6 +1,6 @@
 {
   "name": "nodered-nodes-noderedapi",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Plan to build a Node admin API node set keeping it fairly basic. But will allow me to go meta... :D",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
