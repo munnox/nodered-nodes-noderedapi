@@ -25,7 +25,8 @@
     "nodes": {
       "noderedadmin-config": "noderedadmin/config.js",
       "noderedadmin-auth": "noderedadmin/auth.js",
-      "noderedadmin-module": "noderedadmin/module.js"
+      "noderedadmin-module": "noderedadmin/module.js",
+      "noderedadmin-test-example-subflow": "noderedadmin/test_example_subflow.js"
     }
   },
   "dependencies": {
